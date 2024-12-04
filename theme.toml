@@ -9,7 +9,7 @@ homepage = "https://github.com/Frontdown24/fd-theme"
 demosite = "https://demo.frontdown.me/"
 tags = ["Backup", "Management", "Easy", "Cloud", "Secure", "Reliable", "Automation"]
 features = ["Easy Setup", "Secure Storage", "Cloud Integration", "Automated Backups", "Customizable", "Scheduling", "Backup History", "Multi-platform Support"]
-min_version = "0.130.0"
+min_version = "0.118.0"
 
 [author]
   name = "Frontdown"

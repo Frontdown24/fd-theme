@@ -1,0 +1,55 @@
+name: Auto Tag Version
+
+on:
+  push:
+    branches:
+      - main  # Déclenche cette pipeline lors d'un push sur la branche `main` 
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1: Checkout du code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Étape 2: Lire la version actuelle
+      - name: Read current version
+        id: get_version
+        run: |
+          # Vérifie si le fichier `version.txt` existe, sinon définir une version initiale
+          if [ -f version.txt ]; then
+            VERSION=$(cat METADATA)
+          else
+            VERSION="0.1.0"
+          fi
+          echo "Current version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      # Étape 3: Incrémenter la version mineure
+      - name: Increment minor version
+        run: |
+          # Extraire la version actuelle dans des variables
+          IFS='.' read -r major minor patch <<< "${{ env.VERSION }}"
+          new_minor=$((minor + 1))
+          new_version="${major}.$new_minor.0"
+          echo "New version: $new_version"
+          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
+
+      # Étape 4: Créer et pusher le nouveau tag
+      - name: Create and push new tag
+        env:
+          NEW_VERSION: ${{ env.NEW_VERSION }}
+        run: |
+          # Créer le tag et le pousser
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION
+
+      # Étape 5: Mettre à jour le fichier `version.txt` avec la nouvelle version
+      - name: Update version file
+        run: |
+          echo ${{ env.NEW_VERSION }} > METADATA
+          git add METADATA
+          git commit -m "Update version to ${{ env.NEW_VERSION }}"
+          git push origin main
