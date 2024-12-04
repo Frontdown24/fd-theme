@@ -18,8 +18,8 @@ jobs:
       - name: Read current version
         id: get_version
         run: |
-          # Vérifie si le fichier `version.txt` existe, sinon définir une version initiale
-          if [ -f version.txt ]; then
+          # Vérifie si le fichier `METADATA` existe, sinon définir une version initiale
+          if [ -f METADATA ]; then
             VERSION=$(cat METADATA)
           else
             VERSION="0.1.0"
